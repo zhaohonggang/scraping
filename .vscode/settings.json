@@ -1,0 +1,20 @@
+// Place your settings in this file to overwrite default and user settings.
+{   
+    "editor.rulers": [90,110],
+    "python.pythonPath": "C:\\git\\env\\scrapingEnv\\Scripts\\python.exe",
+    "python.autoComplete.extraPaths": [
+        "C:\\git\\env\\scrapingEnv\\Scripts\\Lib",
+        "C:\\git\\env\\scrapingEnv\\Scripts\\Lib\\site-packages"
+    ],
+     "code-runner.executorMap": {
+        "javascript": "node",
+        "php": "C:\\php\\php.exe",
+        "python": "C:\\git\\env\\scrapingEnv\\Scripts\\python.exe",
+        "perl": "perl",
+        "ruby": "C:\\Ruby23-x64\\bin\\ruby.exe",
+        "go": "go run",
+        "html": "\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\"",
+        "java": "cd $dir && javac $fileName && java $fileNameWithoutExt",
+        "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt"
+    }
+}

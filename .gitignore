@@ -1,0 +1,11 @@
+*.pyc
+.pydevproject
+.settings
+.project
+log/*
+tmp/*
+__pycache__/*
+training/*
+
+settings.py
+log.txt
