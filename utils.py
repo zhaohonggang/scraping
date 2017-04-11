@@ -24,12 +24,22 @@ def isFileExists(file):
     return os.path.isfile(file)
 
 '''
-a = getFiles('20170406')
-a = getFiles('20170406','.json')
+a = getFiles('tmp/20170406')
+a = getFiles('tmp/20170406','.json')
 '''
 def getFiles(folder, ext=None):
     onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f)) and (ext is None or os.path.splitext(f)[1] == ext) ]
     return onlyfiles
+
+'''
+runFolder(lambda x:print(x), './')
+'''
+def runFolder(function, folder, ext=None, *args, **kw):
+    files = getFiles(folder,ext)
+    for f in files:
+        fromFile = join(folder,f)
+        log(fromFile)
+        LogExp(function, fromFile, *args, **kw)    
 
 '''
 g = lambda:1/0
@@ -42,6 +52,7 @@ def LogExp(function, *args, **kw):
     try:
         a = function(*args, **kw)
     except Exception as e: 
+        log(str(function))
         log(str(e)) 
         return None
     else:
@@ -66,9 +77,9 @@ def readFile(file, default='', byFileType=True):
     return data
 
 '''
-d = readJson('20170406/dump.json')
+d = readJson('tmp/20170407/west.json')
 '''
-def readJson(file, default='[]'):
+def readJson(file, default=[]):
     return readFile(file,default)
 
 
@@ -116,7 +127,7 @@ def convertFiles(folderFrom, folderTo, function, ext=None):
         except Exception as e:
             log('error {0} to {1}'.format(fromFile,toFile)) 
             log(str(e))
-            
+           
 '''
 convertToRealJson('20170406/21_15.json','real/21_15.json')
 convertToRealJson(join('20170406','21_15.json'),join('real','21_15.json'))
@@ -213,11 +224,26 @@ def getListFromGen(gen):
         l.append(i)
     return l
 
+'''
+dd = {d[0][str(n)] for n in range(1,16)}
+a = getListFromDict(d[0], sold_fields.split(','))
+'''
+def getListFromDict(d, names):
+    l = {d[str(n)] for n in names}
+    return l
 
-def GetElementssArray(elements, rowfunction):
+
+'''
+dw = {n:d[0][str(n)] for n in range(1,16)}
+a = (lambda x,y:x[y])(d[0],'mlsno')
+(lambda x,y:print(x[y]))(d[0],'mlsno')
+GetElementssArray(d,(lambda x,y:print(x[y])),'mlsno')
+GetElementssArray(d,(lambda x,y:x[y]),'mlsno')
+'''
+def GetElementssArray(elements, rowfunction, *args, **kw):
     a = []
     for e in elements:
-        h = LogExp(rowfunction, e)
+        h = LogExp(rowfunction, e, *args, **kw)
         if h != None:
             a.append(h)
 

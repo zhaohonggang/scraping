@@ -12,14 +12,14 @@ from utils import *
 from settings import *
 import requests
 import json
+from os import listdir
+from os.path import isfile, join
 # from seleniumrequests import Chrome
 # from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 '''
-refresh('cb')
-from cb import *
-
 python
 
+refresh('cb')
 
 from cb import *
 
@@ -104,9 +104,8 @@ def getc():
 r = getSold(43.78760887990924,43.81238855081077,-79.4278062438965,-79.33210502624513)
 print(r)
 '''
-def getSold(latitude1,latitude2,longitude1,longitude2):
+def getSold(url,latitude1,latitude2,longitude1,longitude2):
     time.sleep(1)
-    url = soldApiUrl
     payload = {"latitude1":latitude1,"longitude1":longitude1,"latitude2":latitude2,"longitude2":longitude2}
     req = getRequests()
     # r = requests.post(url, data=json.dumps(payload))
@@ -124,36 +123,42 @@ StepLo = 0.0957012176513672
 '''
 getSoldtoFile(43.78760887990924,43.81238855081077,-79.4278062438965,-79.33210502624513,'tmp/20170406/0_0.json')
 '''
-def getSoldtoFile(latitude1,latitude2,longitude1,longitude2,file):
+def getSoldtoFile(url,latitude1,latitude2,longitude1,longitude2,file):
     try:
         if not isFileExists(file):
-            r = getSold(latitude1,latitude2,longitude1,longitude2)
+            r = getSold(url,latitude1,latitude2,longitude1,longitude2)
             dumpJson(file,r.json())
             log(file)
     except Exception as e: 
         log(str(e))
 
-def getSoldEdge(latitude1, latitude2, longitude1, longitude2, folder):
-    getSoldtoFile(latitude2, LatitudeMax, LongitudeMin, LongitudeMax, '{0}/north.json'.format(folder))
-    getSoldtoFile(LatitudeMin, latitude1, LongitudeMin, LongitudeMax, '{0}/south.json'.format(folder))
-    getSoldtoFile(LatitudeMin, LatitudeMax, longitude2, LongitudeMax, '{0}/east.json'.format(folder))
-    getSoldtoFile(LatitudeMin, LatitudeMax, LongitudeMin, longitude1, '{0}/west.json'.format(folder))
+def getSoldEdge(url,latitude1, latitude2, longitude1, longitude2, folder):
+    getSoldtoFile(url,latitude2, LatitudeMax, LongitudeMin, LongitudeMax, join(folder,'north.json'))
+    getSoldtoFile(url,LatitudeMin, latitude1, LongitudeMin, LongitudeMax, join(folder,'south.json'))
+    getSoldtoFile(url,LatitudeMin, LatitudeMax, longitude2, LongitudeMax, join(folder,'east.json'))
+    getSoldtoFile(url,LatitudeMin, LatitudeMax, LongitudeMin, longitude1, join(folder,'west.json'))
 
 
-def getSoldInside(latitude1,latitude2,longitude1,longitude2,stepla,steplo,folder):
+def getSoldInside(url,latitude1,latitude2,longitude1,longitude2,stepla,steplo,folder):
     listla = getList(latitude1, latitude2 , stepla)
     listlo = getList(longitude1, longitude2 , steplo)
     for n in range(0, len(listla)-1):
         for m in range(0, len(listlo)-1):
-            getSoldtoFile(listla[n],listla[n+1],listlo[m],listlo[m+1],'tmp/{0}/{1}_{2}.json'.format(folder,n,m))
+            getSoldtoFile(url,listla[n],listla[n+1],listlo[m],listlo[m+1],join(folder,'{0}_{1}.json'.format(n,m)))
             
-def RunGetSold():
+def RunGetSold(name, url):
     latitude1 = 43.3041267770092
     latitude2 = 44.41611706762943
     longitude1 = -80.67631874511719
     longitude2 = -78.48591957519531
     folder = getStrFromDate()
-    getSoldEdge(latitude1,latitude2,longitude1,longitude2,folder)
-    getSoldInside(latitude1,latitude2,longitude1,longitude2,StepLa,StepLo,folder)
+    folder = join('tmp',folder,name)
+    getSoldEdge(url,latitude1,latitude2,longitude1,longitude2,folder)
+    getSoldInside(url,latitude1,latitude2,longitude1,longitude2,StepLa,StepLo,folder)
 
-
+'''
+RunGetSolds(dict_sold)
+'''
+def RunGetSolds(d):
+    for name,url in d.items():
+        RunGetSold(name, url)
