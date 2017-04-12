@@ -20,6 +20,14 @@ imp.reload(utils)
 refresh('utils')
 from utils import *
 '''
+
+'''
+
+'''
+def RunDict(function, d, *arg):
+    for key,value in d.items():
+        function(name, url, *arg)
+
 def isFileExists(file):
     return os.path.isfile(file)
 

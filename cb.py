@@ -162,3 +162,11 @@ RunGetSolds(dict_sold)
 def RunGetSolds(d):
     for name,url in d.items():
         RunGetSold(name, url)
+
+'''
+RunInsertSolds(dict_sold_fields, '20170411')
+'''
+def RunInsertSolds(d, folderRaw):
+    for name,fields in d.items():
+        folder = join('tmp',folderRaw,name)
+        LogExp(InsertFromJsonFolder, folder, dsn_raw, sold_table, fields)
