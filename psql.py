@@ -6,10 +6,11 @@ refresh('psql')
 from psql import *
 
 conn = psycopg2.connect(dsn)
+conn = psycopg2.connect(dsn_raw_prod)
 curs = conn.cursor()
 curs.execute("SELECT 1 AS foo")
-
-print curs.fetchone()
+curs.execute("select * from house_raw where mls_number like '%test%'")
+print(curs.fetchone())
 from psycopg2.extensions import AsIs
 curs.execute('INSERT INTO %s (%s, %s) VALUES (%s, %s)', (AsIs('article'), AsIs('article_name'), AsIs('article_desc'), 'test', 'test'))
 curs.execute('INSERT INTO article (article_name, article_desc) VALUES (%s, %s)', ('test', 'test'))
